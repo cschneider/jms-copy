@@ -16,6 +16,8 @@
 package org.talend.jms.copy;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
@@ -24,6 +26,7 @@ import com.beust.jcommander.ParameterException;
  * Example of the "main class". Put your bootstrap logic here.
  */
 public class Main {
+    private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) throws Exception {
         CopyCommand copy = new CopyCommand();
@@ -39,6 +42,9 @@ public class Main {
         } catch (ParameterException e) {
             System.out.println(e.getMessage());
             jc.usage();
+        } catch (Throwable e) {
+            LOG.error("Error copying", e);
+            throw e;
         }
     }
 
