@@ -14,8 +14,11 @@ import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.advisory.DestinationSource;
 import org.apache.activemq.command.ActiveMQQueue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Copy {
+    private static final Logger LOG = LoggerFactory.getLogger(Copy.class);
     private ActiveMQConnection sconn;
     private ActiveMQConnection dconn;
     private AtomicInteger counter;
@@ -35,7 +38,11 @@ public class Copy {
         for (ActiveMQQueue queue : queues) {
             System.out.println(queue.getQueueName());
             counter.set(0);
-            copyQueue(queue);
+            try {
+                copyQueue(queue);
+            } catch (Exception e) {
+                LOG.error("Error copying queue " + queue.getQueueName(), e);
+            }
         }
         dconn.close();
         sconn.close();
